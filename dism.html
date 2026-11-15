@@ -1,0 +1,1952 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title> PIXEL OS</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+  <style>
+    :root {
+      --bg: #07090f;
+      --surface: #0f131f;
+      --surface2: #171d2e;
+      --border: #2e3a59;
+      --border-hi: #00f0ff;
+      --fg: #eef2ff;
+      --fg2: #8b9bb4;
+      --accent: #10b981;
+      --blue: #38bdf8;
+      --orange: #f97316;
+      --yellow: #fbbf24;
+      --red: #ff2a5f;
+      --purple: #a855f7;
+      --shadow: #030407;
+      color-scheme: dark;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #d7dce8;
+      --surface: #eef1f8;
+      --surface2: #dde2ef;
+      --border: #68769c;
+      --border-hi: #2d5be3;
+      --fg: #141824;
+      --fg2: #4a5470;
+      --accent: #258a48;
+      --blue: #2374c6;
+      --orange: #d95b12;
+      --yellow: #c77d0a;
+      --red: #c42730;
+      --purple: #8f3568;
+      --shadow: #9aa5c2;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 !important;
+      image-rendering: pixelated;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      line-height: 1.4;
+      background-image:
+        linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.12),
+        rgba(0, 0, 0, 0.12) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 90;
+    }
+
+    @keyframes screenShake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 4px); }
+      40% { transform: translate(6px, -4px); }
+      60% { transform: translate(-4px, -3px); }
+      80% { transform: translate(4px, 3px); }
+    }
+
+    .shake {
+      animation: screenShake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes floatDamage {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-42px) scale(1.2); }
+    }
+
+    .px-box {
+      background: var(--surface);
+      border: 3px solid var(--border);
+      box-shadow: 4px 4px 0px var(--shadow);
+      position: relative;
+    }
+
+    .px-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9.5px;
+      background: var(--surface2);
+      color: var(--fg);
+      border: 3px solid var(--border);
+      box-shadow: 3px 3px 0px var(--shadow);
+      padding: 8px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      transition: transform 0.05s, border-color 0.15s;
+    }
+    .px-btn:hover {
+      border-color: var(--border-hi);
+      color: var(--yellow);
+    }
+    .px-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--shadow);
+    }
+    .px-btn.active-bgm {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 3px 3px 0px #064e3b;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--surface);
+      border-bottom: 4px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: var(--fg);
+      text-shadow: 2px 2px 0px var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span { color: var(--border-hi); }
+
+    .clock-pill {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      padding: 6px 10px;
+      color: var(--yellow);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Live Pixel Equalizer Visualizer */
+    .visualizer-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 28px;
+      width: 46px;
+      padding: 3px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+    }
+    .vis-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      transition: height 0.1s steps(4);
+    }
+
+    .track-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--accent);
+      background: var(--bg);
+      border: 2px solid var(--border);
+      padding: 6px 8px;
+      max-width: 175px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Spotify Dock Panel ── */
+    .spotify-dock {
+      padding: 10px 12px;
+      border-color: var(--accent);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spotify-dock-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .spotify-status-tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8.5px;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .spotify-hint {
+      font-size: 17px;
+      color: var(--fg2);
+    }
+    .spotify-frame-wrap {
+      width: 100%;
+      min-height: 152px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      overflow: hidden;
+    }
+    .spotify-dock.collapsed .spotify-frame-wrap {
+      height: 80px;
+      min-height: 80px;
+    }
+
+    /* ── Main Layout ── */
+    .main {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px 14px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Top HUD Grid ── */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 14px;
+    }
+
+    .hud-card { padding: 14px; }
+
+    .day-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: var(--blue);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .day-sub {
+      font-size: 18px;
+      color: var(--fg2);
+    }
+
+    .rank-area {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .rank-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rank-icon-frame {
+      width: 44px;
+      height: 44px;
+      background: var(--bg);
+      border: 2px solid var(--yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rank-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .rank-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: var(--yellow);
+      line-height: 1.4;
+    }
+    .xp-counter {
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Streak, Combo & Heatmap */
+    .streak-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .streak-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 17px;
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .hud-mini-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7.5px;
+      color: var(--fg2);
+      margin-top: 6px;
+    }
+
+    .heatmap-wrap { margin-top: 12px; }
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      gap: 3px;
+      margin-top: 6px;
+    }
+    .hm-cell {
+      aspect-ratio: 1;
+      background: var(--bg);
+      border: 2px solid var(--border);
+    }
+    .hm-cell.today { border-color: var(--yellow); }
+    .hm-cell[data-lvl="1"] { background: #1e4d33; border-color: #296b47; }
+    .hm-cell[data-lvl="2"] { background: #2c8a56; border-color: #38b764; }
+    .hm-cell[data-lvl="3"] { background: #10b981; border-color: #a7f070; }
+
+    /* ── Daily Boss Battle Panel ── */
+    .boss-card {
+      padding: 14px;
+      border-color: var(--red);
+      background: linear-gradient(180deg, rgba(255, 42, 95, 0.08) 0%, var(--surface) 100%);
+    }
+    .boss-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .boss-identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .boss-sprite {
+      width: 46px;
+      height: 46px;
+      background: var(--bg);
+      border: 2px solid var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .boss-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10.5px;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .boss-sub {
+      font-size: 18px;
+      color: var(--fg2);
+    }
+    .combo-pill {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      background: var(--bg);
+      border: 2px solid var(--yellow);
+      color: var(--yellow);
+      padding: 6px 10px;
+    }
+    .boss-hp-fill {
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--red),
+        var(--red) 12px,
+        #be123c 12px,
+        #be123c 16px
+      );
+      transition: width 0.3s steps(12);
+    }
+    .damage-floater {
+      position: absolute;
+      right: 20px;
+      top: 14px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: var(--yellow);
+      text-shadow: 2px 2px 0 #000;
+      pointer-events: none;
+      animation: floatDamage 0.85s ease-out forwards;
+      z-index: 50;
+    }
+
+    /* ── Progress Bar ── */
+    .progress-card { padding: 14px; }
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-msg { font-size: 19px; color: var(--fg); }
+    .progress-pct {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: var(--accent);
+    }
+    .px-bar-track {
+      height: 18px;
+      background: var(--bg);
+      border: 3px solid var(--border);
+      padding: 2px;
+    }
+    .px-bar-fill {
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent) 10px,
+        #059669 10px,
+        #059669 14px
+      );
+      transition: width 0.3s steps(10);
+    }
+
+    /* ── Quote Box ── */
+    .quote-box {
+      padding: 14px;
+      border-color: var(--blue);
+    }
+    .quote-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .quote-tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--blue);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quote-text {
+      font-size: 21px;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+    .quote-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .quote-author {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--yellow);
+    }
+    .quote-cat {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      color: var(--blue);
+      padding: 3px 6px;
+      text-transform: uppercase;
+    }
+
+    /* ── Status Bar ── */
+    .status-bar {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+    }
+    .blink-sq {
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: blink 1s steps(2) infinite;
+    }
+    .status-bar.in-school .blink-sq { background: var(--orange); }
+    @keyframes blink { 50% { opacity: 0.2; } }
+
+    /* ── Section Header ── */
+    .sec-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--yellow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ── Schedule Slots ── */
+    .schedule { display: flex; flex-direction: column; gap: 10px; }
+
+    .slot-wrap {
+      background: var(--surface);
+      border: 3px solid var(--border);
+      box-shadow: 4px 4px 0px var(--shadow);
+      border-left: 8px solid var(--slot-color, var(--border));
+    }
+    .slot-wrap.active {
+      border-color: var(--yellow);
+      border-left-color: var(--slot-color);
+    }
+    .slot-wrap.done {
+      border-color: var(--accent);
+      border-left-color: var(--accent);
+      opacity: 0.88;
+    }
+    .slot-wrap.skipped { opacity: 0.45; }
+
+    .slot-main {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slot-main:hover { background: var(--surface2); }
+
+    .slot-check {
+      width: 26px;
+      height: 26px;
+      border: 3px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      flex-shrink: 0;
+      color: transparent;
+    }
+    .slot-wrap.done .slot-check {
+      background: var(--accent);
+      border-color: var(--fg);
+      color: #fff;
+    }
+    .slot-wrap.skipped .slot-check {
+      background: var(--red);
+      border-color: var(--fg);
+      color: #fff;
+    }
+
+    .slot-px-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .slot-info { flex: 1; min-width: 0; }
+    .slot-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 2px;
+    }
+    .slot-time {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--fg2);
+    }
+    .tag-now {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      background: var(--yellow);
+      color: #000;
+      padding: 2px 5px;
+    }
+    .tag-xp {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--orange);
+    }
+    .slot-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--fg);
+      line-height: 1.5;
+      margin: 4px 0 2px;
+    }
+    .slot-wrap.done .slot-title {
+      text-decoration: line-through;
+      color: var(--fg2);
+    }
+    .slot-desc {
+      font-size: 18px;
+      color: var(--fg2);
+    }
+
+    /* Accordion Guide */
+    .slot-guide {
+      display: none;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-top: 3px dashed var(--border);
+      font-size: 19px;
+    }
+    .slot-wrap.open .slot-guide { display: block; }
+    .guide-head {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9.5px;
+      color: var(--slot-color, var(--yellow));
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .slot-guide ul {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .slot-guide strong { color: var(--yellow); }
+
+    /* ── Auto-Save Daily Review Log ── */
+    .journal-box { padding: 14px; }
+    .journal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .journal-status {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8.5px;
+      color: var(--accent);
+    }
+    .px-textarea {
+      width: 100%;
+      min-height: 115px;
+      background: var(--bg);
+      color: var(--fg);
+      border: 3px solid var(--border);
+      padding: 12px;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      line-height: 1.45;
+      resize: vertical;
+    }
+    .px-textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    .history-drawer {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px dashed var(--border);
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .history-drawer.open { display: block; }
+    .hist-item {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .hist-date {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8.5px;
+      color: var(--yellow);
+      margin-bottom: 4px;
+    }
+
+    /* ── Modal Rank List ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      z-index: 60;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      max-width: 560px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 18px;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--border);
+    }
+    .modal-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--yellow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rank-row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+    }
+    .rank-row-item.unlocked { border-color: var(--accent); }
+    .rank-row-item.current {
+      border-color: var(--yellow);
+      background: var(--surface2);
+    }
+    .rank-row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .r-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9.5px;
+      color: var(--fg);
+      line-height: 1.4;
+    }
+    .r-xp {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .footer-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hud-grid { grid-template-columns: 1fr; }
+      .logo { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo"><span id="logoSvgSlot"></span> <span></span></div>
+    <div class="clock-pill" id="clock">00:00:00</div>
+  </div>
+  <div class="header-right">
+    <div class="visualizer-box" id="visualizerBox" title="Spotify Live Visualizer">
+      <div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+    </div>
+    <div class="track-badge" id="trackBadge">SPOTIFY: LOADING...</div>
+    <button class="px-btn" id="bgmBtn" title="Play / Pause Spotify BGM"><span id="bgmIconSlot"></span> BGM: AUTO</button>
+    <button class="px-btn" id="nextTrackBtn" title="ganti Lagu Berikutnya"><span id="nextIconSlot"></span> NEXT</button>
+    <button class="px-btn" id="sfxBtn" title="Efek Suara"></button>
+    <button class="px-btn" id="themeBtn" title="Ganti Tema"></button>
+  </div>
+</header>
+
+<main class="main" id="mainContainer">
+
+  <!-- Spotify Playlist Background Player Dock -->
+  <section class="px-box spotify-dock" id="spotifyDock">
+    <div class="spotify-dock-head">
+      <span class="spotify-status-tag"><span id="spotifyIconSlot"></span> SPOTIFY BGM // AUTO-NEXT & BACKGROUND MODE</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="spotify-hint" id="spotifyHint">Autoplay aktif • Lanjut otomatis saat selesai</span>
+        <button class="px-btn" id="toggleDockBtn" title="Perkecil/Perbesar Player">MINI</button>
+      </div>
+    </div>
+    <div class="spotify-frame-wrap">
+      <div id="spotifyEmbedMount"></div>
+    </div>
+  </section>
+
+  <!-- HUD: Tanggal, Rank, XP & Heatmap -->
+  <section class="hud-grid">
+    <div class="px-box hud-card">
+      <div class="day-label" id="dayLabel">MEMUAT...</div>
+      <div class="day-sub">SEKOLAH 07.00-15.40 • FOKUS 16.10-22.00</div>
+      <div class="rank-area">
+        <div class="rank-badge-wrap">
+          <div class="rank-icon-frame" id="currentRankIcon"></div>
+          <div class="rank-info">
+            <div class="rank-title" id="rankTitle">LVL 1 • NPC MODE</div>
+            <div class="xp-counter" id="xpCounter">TOTAL: 0 XP (NEXT: 250 XP)</div>
+          </div>
+        </div>
+        <button class="px-btn" id="openRanksBtn"><span id="trophyIconSlot"></span> RANK LIST</button>
+      </div>
+    </div>
+
+    <div class="px-box hud-card">
+      <div class="streak-top">
+        <div>
+          <div class="streak-num"><span id="streakNum">0</span><span id="fireIconSlot"></span></div>
+          <div class="hud-mini-label">DAY STREAK</div>
+        </div>
+        <div style="text-align:center">
+          <div class="streak-num" style="color:var(--yellow)" id="comboHudNum">x1.0</div>
+          <div class="hud-mini-label">COMBO MULT</div>
+        </div>
+        <div style="text-align:right">
+          <div class="streak-num" style="color:var(--accent)" id="totalMissions">0</div>
+          <div class="hud-mini-label">QUEST DONE</div>
+        </div>
+      </div>
+      <div class="heatmap-wrap">
+        <div class="hud-mini-label">28-DAY DISCIPLINE MATRIX</div>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daily Boss Battle Panel ("MONSTER PENUNDAAN") -->
+  <section class="px-box boss-card" id="bossPanel">
+    <div class="boss-head">
+      <div class="boss-identity">
+        <div class="boss-sprite" id="bossAvatarSlot"></div>
+        <div>
+          <div class="boss-name">BOSS HARIAN: MONSTER PENUNDAAN</div>
+          <div class="boss-sub" id="bossStatusText">Selesaikan quest untuk menghancurkan HP Boss!</div>
+        </div>
+      </div>
+      <div class="combo-pill" id="bossHpLabel">HP: 1000 / 1000</div>
+    </div>
+    <div class="px-bar-track">
+      <div class="boss-hp-fill" id="bossHpFill" style="width:100%"></div>
+    </div>
+  </section>
+
+  <!-- Daily Progress -->
+  <section class="px-box progress-card">
+    <div class="progress-head">
+      <span class="progress-msg" id="progressMsg">Selesaikan quest pertama untuk dapat XP!</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="px-bar-track">
+      <div class="px-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </section>
+
+  <!-- Random Quote (quotes.liupurnomo.com) -->
+  <section class="px-box quote-box">
+    <div class="quote-head">
+      <span class="quote-tag"><span id="scrollIconSlot"></span> RANDOM QUOTE // LIUPURNOMO API</span>
+      <button class="px-btn" id="refreshQuoteBtn">↻ GANTI</button>
+    </div>
+    <div class="quote-text" id="quoteText">Memuat quote...</div>
+    <div class="quote-footer">
+      <div class="quote-author" id="quoteAuthor"></div>
+      <span class="quote-cat" id="quoteCat" style="display:none"></span>
+    </div>
+  </section>
+
+  <!-- Live Status -->
+  <div class="px-box status-bar" id="statusBar">
+    <div class="blink-sq"></div>
+    <span id="statusIconSlot" style="display:inline-flex"></span>
+    <span id="statusText">Mengecek waktu sistem...</span>
+  </div>
+
+  <!-- Daily Quests -->
+  <div class="sec-title">
+    <span style="display:inline-flex;align-items:center;gap:8px"><span id="questSecIcon"></span> DAILY QUESTS (16:10 – 22:00)</span>
+    <span style="font-family:'VT323',monospace;font-size:18px;color:var(--fg2)">KLIK KARTU = SELESAI | [INFO] = CARA</span>
+  </div>
+  <div class="schedule" id="schedule"></div>
+
+  <!-- Auto-Save Daily Review Log -->
+  <section class="px-box journal-box">
+    <div class="journal-head">
+      <span class="quote-tag" style="color:var(--yellow)"><span id="journalIconSlot"></span> CATATAN REVIEW HARI INI</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="journal-status" id="saveIndicator">● AUTO-SAVE AKTIF</span>
+        <button class="px-btn" id="toggleHistoryBtn"><span id="historyIconSlot"></span> RIWAYAT</button>
+      </div>
+    </div>
+    <textarea class="px-textarea" id="reviewInput" placeholder="Tulis evaluasi hari ini di sini... (Apa yang berhasil? Apa kendalanya? Besok mau perbaiki apa?) — Otomatis tersimpan setiap ketikan!"></textarea>
+    <div class="history-drawer" id="historyDrawer"></div>
+  </section>
+
+  <div class="footer-bar">
+    <button class="px-btn" id="resetBtn" style="color:var(--red)">↺ RESET QUEST HARI INI</button>
+  </div>
+
+</main>
+
+<!-- Modal Daftar Semua Rank -->
+<div class="modal-backdrop" id="rankModal">
+  <div class="px-box modal-box">
+    <div class="modal-head">
+      <span class="modal-title"><span id="modalTrophySlot"></span> HIERARKI RANK DISIPLIN</span>
+      <button class="px-btn" id="closeRanksBtn">✖ TUTUP</button>
+    </div>
+    <p style="margin-bottom:12px;color:var(--fg2)">Kumpulkan XP dari setiap quest harian untuk naik pangkat dari paling bawah ke puncak:</p>
+    <div id="rankListContainer"></div>
+  </div>
+</div>
+
+<!-- Spotify IFrame API -->
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+
+<script>
+  /* ── 0. 100% CUSTOM PIXEL ART SVG LIBRARY (TANPA EMOJI) ── */
+  const PX_ICONS = {
+    swordBolt: `<svg width="20" height="20" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#00f0ff" d="M9 1h2v3h3l-5 6v5H7v-4H4l5-6V1z"/>
+      <path fill="#ffffff" d="M9 2h1v3h2l-4 5v3H8v-3H6l3-4V2z"/>
+    </svg>`,
+    spotifyDisc: `<svg width="14" height="14" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#10b981" d="M5 1h6v2h2v2h2v6h-2v2h-2v2H5v-2H3v-2H1V5h2V3h2V1z"/>
+      <path fill="#07090f" d="M4 5h8v1H4V5zm1 3h6v1H5V8zm1 3h4v1H6v-1z"/>
+    </svg>`,
+    musicNote: `<svg width="14" height="14" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="currentColor" d="M6 2h7v3H8v7H4v-3h2V2zm5 3h2v6h-2V5z"/>
+    </svg>`,
+    nextTrack: `<svg width="14" height="14" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="currentColor" d="M2 3h2v2h2v2h2v2H6v2H4v2H2V3zm8 0h3v10h-3V3z"/>
+    </svg>`,
+    soundOn: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#38bdf8" d="M2 6h3l4-3v10l-4-3H2V6zm9 0h2v4h-2V6zm2-2h2v8h-2V4z"/>
+    </svg>`,
+    soundOff: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#8b9bb4" d="M2 6h3l4-3v10l-4-3H2V6z"/>
+      <path fill="#ff2a5f" d="M11 6h1v1h1v-1h1v1h-1v2h1v1h-1v-1h-1v1h-1v-1h1V7h-1V6z"/>
+    </svg>`,
+    sun: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#fbbf24" d="M7 1h2v2H7V1zm0 12h2v2H7v-2zM1 7h2v2H1V7zm12 0h2v2h-2V7zM3 3h2v2H3V3zm8 8h2v2h-2v-2zm0-8h2v2h-2V3zM3 11h2v2H3v-2zm2-6h6v6H5V5z"/>
+    </svg>`,
+    moon: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#818cf8" d="M6 2h4v2H8v2H6v4h2v2h2v2H6v-2H4V4h2V2z"/>
+    </svg>`,
+    trophy: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#fbbf24" d="M3 2h10v5h-2v2H9v3h3v2H4v-2h3V9H5V7H3V2zM1 3h2v3H1V3zm12 0h2v3h-2V3z"/>
+    </svg>`,
+    fire: `<svg width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#f97316" d="M7 1h2v3h2v3h2v5l-3 3H6l-3-3V7h2V4h2V1z"/>
+      <path fill="#fbbf24" d="M7 6h2v3h2v3H5V9h2V6z"/>
+    </svg>`,
+    scroll: `<svg width="14" height="14" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#38bdf8" d="M3 2h10v12H3V2z"/>
+      <path fill="#0f131f" d="M5 4h6v1H5V4zm0 3h6v1H5V7zm0 3h4v1H5v-1z"/>
+    </svg>`,
+    info: `<svg width="12" height="12" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="currentColor" d="M7 2h2v2H7V2zm0 4h2v8H7V6z"/>
+    </svg>`,
+    bossMonster: `<svg width="32" height="32" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#ff2a5f" d="M3 2h2v2H3V2zm8 0h2v2h-2V2zM2 4h12v8H2V4zM1 7h1v4H1V7zm13 0h1v4h-1V7zM3 12h3v2H3v-2zm7 0h3v2h-3v-2z"/>
+      <path fill="#07090f" d="M4 6h3v2H4V6zm5 0h3v2H9V6zM5 10h6v1H5v-1z"/>
+      <path fill="#fbbf24" d="M5 7h1v1H5V7zm5 0h1v1h-1V7z"/>
+    </svg>`,
+    school: `<svg width="18" height="18" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#f97316" d="M7 2h2v2h4v3h1v7H2V7h1V4h4V2z"/>
+      <path fill="#07090f" d="M7 10h2v4H7v-4zM4 7h2v2H4V7zm6 0h2v2h-2V7z"/>
+    </svg>`,
+    bus: `<svg width="18" height="18" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#fbbf24" d="M2 4h12v7H2V4z"/>
+      <path fill="#38bdf8" d="M4 6h3v2H4V6zm5 0h3v2H9V6z"/>
+      <path fill="#94a3b8" d="M3 11h2v2H3v-2zm8 0h2v2h-2v-2z"/>
+    </svg>`,
+    bolt: `<svg width="18" height="18" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#10b981" d="M8 1h3L8 6h4l-6 9 1-6H4l4-8z"/>
+    </svg>`,
+    barbell: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#94a3b8" d="M1 5h2v6H1V5zm12 0h2v6h-2V5z"/>
+      <path fill="#f97316" d="M3 3h2v10H3V3zm8 0h2v10h-2V3z"/>
+      <path fill="#eef2ff" d="M5 7h6v2H5V7z"/>
+    </svg>`,
+    glowStar: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#fbbf24" d="M7 1h2v4h4v2H9v4H7V7H3V5h4V1z"/>
+      <path fill="#fef08a" d="M7 3h2v6H7V3zM5 5h6v2H5V5z"/>
+      <path fill="#38bdf8" d="M2 2h2v2H2V2zm10 10h2v2h-2v-2z"/>
+    </svg>`,
+    globeWeb: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#0284c7" d="M5 2h6v12H5V2zM2 5h12v6H2V5z"/>
+      <path fill="#10b981" d="M4 4h3v3H4V4zm5 4h3v3H9V8zM5 10h2v2H5v-2z"/>
+      <path fill="#38bdf8" d="M7 2h2v12H7V2zM2 7h12v2H2V7z"/>
+    </svg>`,
+    coffeeCup: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#94a3b8" d="M5 1h1v2H5V1zm4 0h1v2H9V1z"/>
+      <path fill="#d97706" d="M3 5h8v7H3V5z"/>
+      <path fill="#f59e0b" d="M11 6h3v4h-3V6zm1 1v2h1V7h-1z"/>
+      <path fill="#fef3c7" d="M4 6h6v1H4V6z"/>
+      <path fill="#64748b" d="M2 13h10v1H2v-1z"/>
+    </svg>`,
+    pythonSnake: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#3b82f6" d="M4 2h6v4H6v2h6v2H4V6h4V4H4V2z"/>
+      <path fill="#fbbf24" d="M10 6h2v6H6v2h6v-2h2V6h-4z"/>
+      <path fill="#ffffff" d="M5 3h1v1H5V3zm5 9h1v1h-1v-1z"/>
+    </svg>`,
+    chessKnight: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#eef2ff" d="M6 2h4v2h2v3H9v2h2v3H4v-2h2V7H4V4h2V2z"/>
+      <path fill="#94a3b8" d="M3 13h10v2H3v-2z"/>
+      <path fill="#07090f" d="M8 4h1v1H8V4z"/>
+    </svg>`,
+    foodPlate: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#cbd5e1" d="M2 10h12v2H2v-2zm2 2h8v1H4v-1z"/>
+      <path fill="#10b981" d="M4 7h4v3H4V7z"/>
+      <path fill="#f97316" d="M8 6h4v4H8V6z"/>
+      <path fill="#ef4444" d="M6 5h3v2H6V5z"/>
+    </svg>`,
+    reviewBook: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#a855f7" d="M2 3h5v10H2V3zm7 0h5v10H9V3z"/>
+      <path fill="#f8fafc" d="M3 4h4v8H3V4zm6 0h4v8H9V4z"/>
+      <path fill="#64748b" d="M4 6h2v1H4V6zm0 2h2v1H4V8zm6-2h2v1h-2V6zm0 2h2v1h-2V8z"/>
+    </svg>`,
+    sleepMoon: `<svg width="24" height="24" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#818cf8" d="M6 2h4v2H8v2H6v4h2v2h2v2H6v-2H4V4h2V2z"/>
+      <path fill="#fef08a" d="M11 3h2v2h-2V3zm1 5h1v1h-1V8z"/>
+    </svg>`,
+    rank1: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#64748b" d="M4 3h8v10H4V3z"/>
+      <path fill="#07090f" d="M6 6h1v2H6V6zm3 0h1v2H9V6zm-3 4h4v1H6v-1z"/>
+    </svg>`,
+    rank2: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#38bdf8" d="M5 2h6v3h2v8H3V5h2V2zm2 2v1h2V4H7z"/>
+      <path fill="#07090f" d="M7 8h2v3H7V8z"/>
+    </svg>`,
+    rank3: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#10b981" d="M7 2h2v3h3v2H9v7H7V7H4V5h3V2z"/>
+      <path fill="#a7f3d0" d="M7 3h2v10H7V3z"/>
+    </svg>`,
+    rank4: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#00f0ff" d="M7 1h2v3h3v2h3v2h-3v2H9v3H7v-3H4V8H1V6h3V4h3V1z"/>
+      <path fill="#ffffff" d="M7 6h2v2H7V6z"/>
+    </svg>`,
+    rank5: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#60a5fa" d="M3 2h10v7l-5 5-5-5V2z"/>
+      <path fill="#dbeafe" d="M5 4h6v4l-3 3-3-3V4z"/>
+    </svg>`,
+    rank6: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#a855f7" d="M4 2h8v2h2v7l-6 4-6-4V4h2V2z"/>
+      <path fill="#f3e8ff" d="M7 5h2v6H7V5zM5 7h6v2H5V7z"/>
+    </svg>`,
+    rank7: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#f97316" d="M7 1h2v3h3v3h2v5l-6 3-6-3V7h2V4h3V1z"/>
+      <path fill="#fef08a" d="M7 5h2v6H7V5zM5 7h6v2H5V7z"/>
+    </svg>`,
+    rank8: `<svg width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#fbbf24" d="M2 3h2v3h3V2h2v4h3V3h2v8l-6 4-6-4V3z"/>
+      <path fill="#ff2a5f" d="M7 6h2v3H7V6z"/>
+      <path fill="#ffffff" d="M3 4h1v2H3V4zm9 0h1v2h-1V4z"/>
+    </svg>`
+  };
+
+  /* ── 1. HIERARKI RANK ── */
+  const RANKS = [
+    { lvl: 1,  minXP: 0,    icon: "rank1", name: "NPC MODE",           desc: "Baru bangun dari zona nyaman." },
+    { lvl: 2,  minXP: 250,  icon: "rank2", name: "LOCKED IN",          desc: "Mulai fokus dan serius eksekusi." },
+    { lvl: 3,  minXP: 500,  icon: "rank3", name: "GRINDSET",           desc: "Konsisten jalanin rutinitas tanpa banyak alasan." },
+    { lvl: 5,  minXP: 1000, icon: "rank4", name: "MAIN CHARACTER",     desc: "Kendali penuh atas waktu & kebiasaan diri sendiri." },
+    { lvl: 8,  minXP: 1750, icon: "rank5", name: "COLD BLOODED",       desc: "Tetap eksekusi walau lagi capek atau malas." },
+    { lvl: 12, minXP: 2750, icon: "rank6", name: "SIGMA STOIC",        desc: "Mental baja, anti-distraksi & anti-overthinking." },
+    { lvl: 16, minXP: 3750, icon: "rank7", name: "ULTRA DISCIPLINE",   desc: "Disiplin sudah mendarah daging, level elit." },
+    { lvl: 20, minXP: 4750, icon: "rank8", name: "TIER NEVER GIVE UP", desc: "Puncak tertinggi: pantang menyerah dalam kondisi apa pun." }
+  ];
+
+  /* ── 2. DATA JADWAL & PANDUAN DETAIL ── */
+  const SLOTS = [
+    {
+      id: "s1", time: "16:10", end: "16:40", icon: "barbell", xp: 30, dmg: 120, color: "#f97316",
+      title: "Workout (Naikin Berat Badan)",
+      desc: "Latihan beban tubuh + surplus kalori biar badan berisi",
+      guideTitle: "CARA MENAIKKAN BERAT BADAN & LATIHAN:",
+      guideItems: [
+        "<strong>Surplus Kalori (Kunci Utama):</strong> Berat badan naik jika kalori masuk > kalori keluar. Wajib tambah porsi makan (nasi, telur, ayam, tempe, susu, pisang).",
+        "<strong>Latihan Compound Tanpa Alat (3–4 Set, istirahat 60 dtk):</strong>",
+        "• <strong>Push-Up (8–15x):</strong> Melatih otot dada, bahu depan, dan lengan.",
+        "• <strong>Squat / Lunges (15–20x):</strong> Otot kaki adalah otot terbesar; melatihnya memicu hormon pembentukan massa tubuh.",
+        "• <strong>Pike Push-Up (6–12x):</strong> Bikin bahu terlihat lebih lebar dan tegap.",
+        "• <strong>Plank (30–60 dtk):</strong> Menguatkan otot perut & memperbaiki postur."
+      ]
+    },
+    {
+      id: "s2", time: "16:40", end: "17:00", icon: "glowStar", xp: 20, dmg: 80, color: "#a855f7",
+      title: "Glow Up Rutin (Tanpa Biaya)",
+      desc: "Perawatan fisik, postur, & kebersihan 100% gratis",
+      guideTitle: "RUTINITAS GLOW UP 100% GRATIS:",
+      guideItems: [
+        "<strong>Mandi & Cuci Muka Bersih:</strong> Bersihkan keringat setelah workout, keringkan wajah dengan handuk bersih (tepuk-tepuk lembut, jangan digosok).",
+        "<strong>Postur & Mewing:</strong> Tegakkan punggung, tarik bahu ke belakang. Tempelkan lidah ke langit-langit mulut & bernapas lewat hidung agar garis rahang tegas.",
+        "<strong>Hidrasi Maksimal:</strong> Minum air putih minimal 2 liter/hari agar kulit segar dan tidak kusam.",
+        "<strong>Grooming Rapi:</strong> Rapikan rambut, potong kuku rutin, dan pakai baju bersih yang pas di badan."
+      ]
+    },
+    {
+      id: "s3", time: "17:00", end: "18:00", icon: "globeWeb", xp: 40, dmg: 150, color: "#38bdf8",
+      title: "Project Website (Sesi 1)",
+      desc: "Website pencegah overthinking — fokus fitur utama",
+      guideTitle: "PROJECT: WEBSITE PENCEGAH OVERTHINKING",
+      guideItems: [
+        "<strong>Fokus Misi:</strong> Mengembangkan <em>Website pencegah overthinking</em> agar makin interaktif dan membantu menenangkan pikiran.",
+        "<strong>Aturan 60 Menit Deep Work:</strong> Tutup tab yang tidak perlu, fokus selesaikan 1 fitur atau perbaikan tampilan sebelum jam 18:00."
+      ]
+    },
+    {
+      id: "s4", time: "18:00", end: "18:15", icon: "coffeeCup", xp: 10, dmg: 50, color: "#8b9bb4",
+      title: "Istirahat & Reset Mata",
+      desc: "Minum air, ibadah, jauhkan layar sejenak",
+      guideTitle: "ATURAN ISTIRAHAT 15 MENIT:",
+      guideItems: [
+        "<strong>Istirahatkan Mata:</strong> Lihat jarak jauh agar mata tidak tegang.",
+        "<strong>Dilarang Doomscrolling:</strong> Jangan buka video pendek (TikTok/Reels) karena merusak fokus untuk sesi berikutnya."
+      ]
+    },
+    {
+      id: "s5", time: "18:15", end: "19:00", icon: "pythonSnake", xp: 35, dmg: 130, color: "#10b981",
+      title: "Belajar Python",
+      desc: "Praktik langsung bikin skrip & tools biar seru",
+      guideTitle: "CARA BELAJAR PYTHON PALING EFEKTIF & SERU:",
+      guideItems: [
+        "<strong>Hindari Tutorial Hell:</strong> Jangan cuma menonton video panjang. Gunakan pola 20% baca konsep, 80% langsung ngoding.",
+        "<strong>Bikin Proyek Mini yang Berguna:</strong> Buat bot otomatisasi, skrip API, tools CLI, atau mini-game berbasis teks.",
+        "<strong>Pecahkan Masalah & Baca Error:</strong> Saat kode error, baca pesan error-nya dan perbaiki sendiri—otak paling cepat belajar saat debugging."
+      ]
+    },
+    {
+      id: "s6", time: "19:00", end: "19:30", icon: "chessKnight", xp: 25, dmg: 100, color: "#fbbf24",
+      title: "Chess.com (Asah Logika)",
+      desc: "Main Rapid terukur + evaluasi langkah blunder",
+      guideTitle: "CARA BERPIKIR, JUMLAH MAIN & MATERI CHESS.COM:",
+      guideItems: [
+        "<strong>Berapa Kali Main?</strong> Cukup <strong>1–2 game Rapid (10+0)</strong> per hari. Jangan spam Blitz/Bullet karena bikin main asal gerak. Jika kalah 2x beruntun, berhenti agar tidak emosi (<em>tilt</em>).",
+        "<strong>Pola Pikir Setiap Langkah (CCT):</strong> Sebelum jalan, selalu cek: <strong>C</strong>hecks (Skak), <strong>C</strong>aptures (Makan bidak), <strong>T</strong>hreats (Ancaman lawan).",
+        "<strong>Prinsip Dasar Opening:</strong> Rebut pusat papan (e4/d4), keluarkan Kuda & Gajah dulu, segera Rokade untuk amankan Raja.",
+        "<strong>Materi Belajar:</strong> Kerjakan 5–10 soal <em>Tactics Puzzle</em> harian dan cek <em>Game Review</em> setelah tanding."
+      ]
+    },
+    {
+      id: "s7", time: "19:30", end: "20:00", icon: "foodPlate", xp: 20, dmg: 80, color: "#f97316",
+      title: "Makan Malam (Surplus Kalori)",
+      desc: "Asupan protein & karbohidrat untuk pemulihan otot",
+      guideTitle: "STRATEGI MAKAN MALAM BULKING:",
+      guideItems: [
+        "<strong>Wajib Porsi Penuh:</strong> Nasi + sumber protein (telur, ayam, ikan, tahu/tempe) untuk memperbaiki serat otot setelah latihan sore.",
+        "<strong>Tambah Ekstra Kalori:</strong> Minum segelas susu atau makan pisang setelah makan malam."
+      ]
+    },
+    {
+      id: "s8", time: "20:00", end: "21:00", icon: "globeWeb", xp: 40, dmg: 140, color: "#38bdf8",
+      title: "Project Website (Sesi 2)",
+      desc: "Website pencegah overthinking — finishing & uji coba",
+      guideTitle: "LANJUTAN: WEBSITE PENCEGAH OVERTHINKING",
+      guideItems: [
+        "<strong>Finishing & Testing:</strong> Cek ulang tampilan di layar HP/PC, rapikan bug kecil, dan simpan progres kode malam ini."
+      ]
+    },
+    {
+      id: "s9", time: "21:00", end: "21:30", icon: "reviewBook", xp: 20, dmg: 75, color: "#10b981",
+      title: "Review & Refleksi Harian",
+      desc: "Tulis evaluasi di kotak Auto-Save di bawah",
+      guideTitle: "CARA REVIEW HARIAN:",
+      guideItems: [
+        "<strong>Isi Kotak Review di Bawah:</strong> Catat 1 hal yang kamu banggakan hari ini dan 1 perbaikan untuk besok."
+      ]
+    },
+    {
+      id: "s10", time: "21:30", end: "22:00", icon: "sleepMoon", xp: 20, dmg: 75, color: "#a855f7",
+      title: "Wind Down & Tidur",
+      desc: "Jauhkan HP, istirahat total untuk pertumbuhan otot",
+      guideTitle: "KENAPA TIDUR JAM 22.00 PENTING:",
+      guideItems: [
+        "<strong>Otot & Otak Pulih Saat Tidur:</strong> Berat badan & otot berkembang optimal saat kamu tidur nyenyak sebelum tengah malam."
+      ]
+    }
+  ];
+
+  /* ── 3. RANDOM QUOTE (API SAJA • PREFETCH POOL + CACHE + RACE + TERJEMAH INDONESIA) ── */
+  const QUOTE_API = "https://quotes.liupurnomo.com/api/quotes/random";
+  const QUOTE_CACHE_KEY = "px_quote_pool_id_v2";
+  const QUOTE_POOL_SIZE = 8;
+
+  const qTextEl = document.getElementById("quoteText");
+  const qAuthEl = document.getElementById("quoteAuthor");
+  const qCatEl  = document.getElementById("quoteCat");
+
+  let quotePool = [];
+  try { quotePool = JSON.parse(localStorage.getItem(QUOTE_CACHE_KEY)) || []; } catch {}
+  let refilling = false;
+  let showingQuote = false;
+  let currentQuoteKey = "";
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const savePool = () => { try { localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(quotePool)); } catch {} };
+
+  function parseQuote(payload) {
+    let item = payload?.data ?? payload;
+    if (Array.isArray(item)) item = item[0];
+    if (item && item.text) {
+      return { text: String(item.text), author: item.author || "Anonim", category: item.category || "" };
+    }
+    return null;
+  }
+
+  // fetch dengan timeout
+  async function fetchWithTimeout(url, timeoutMs = 4000) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { cache: "no-store", signal: ctrl.signal });
+      return await res.text();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function tryQuoteUrl(url) {
+    const body = await fetchWithTimeout(url, 4000);
+    const q = parseQuote(JSON.parse(body));
+    if (!q) throw new Error("format salah");
+    return q;
+  }
+
+  // Balapan: langsung ke API + 2 proxy sekaligus, ambil yang tercepat berhasil
+  function fetchQuoteRace() {
+    const u = `${QUOTE_API}?_=${Date.now()}${Math.random().toString(36).slice(2, 6)}`;
+    const enc = encodeURIComponent(u);
+    return Promise.any([
+      tryQuoteUrl(u),
+      tryQuoteUrl(`https://api.allorigins.win/raw?url=${enc}`),
+      tryQuoteUrl(`https://corsproxy.io/?${enc}`)
+    ]);
+  }
+
+  async function fetchQuoteRetry(maxRounds = 3) {
+    for (let i = 0; i < maxRounds; i++) {
+      try { return await fetchQuoteRace(); } catch {}
+      await sleep(400 * (i + 1));
+    }
+    return null;
+  }
+
+  // ── Terjemahan otomatis ke Bahasa Indonesia (gagal = pakai teks asli) ──
+  async function translateId(text) {
+    if (!text || !text.trim()) return text;
+    const enc = encodeURIComponent(text);
+    const timed = async (url, pick) => {
+      const body = await fetchWithTimeout(url, 4000);
+      const out = pick(JSON.parse(body));
+      if (!out) throw new Error("kosong");
+      return out;
+    };
+    try {
+      return await Promise.any([
+        timed(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=id&dt=t&q=${enc}`,
+              j => j[0].map(s => s[0]).join("")),
+        timed(`https://api.mymemory.translated.net/get?q=${enc}&langpair=en|id`,
+              j => j.responseData?.translatedText)
+      ]);
+    } catch {
+      return text;
+    }
+  }
+
+  async function toId(q) {
+    const [text, category] = await Promise.all([translateId(q.text), translateId(q.category)]);
+    return { ...q, text, category };
+  }
+
+  // Isi pool di latar belakang (sudah diterjemahkan sebelum disimpan)
+  async function refillPool() {
+    if (refilling) return;
+    refilling = true;
+    let fails = 0;
+    while (quotePool.length < QUOTE_POOL_SIZE && fails < 3) {
+      const raw = await fetchQuoteRetry(2);
+      if (!raw) { fails++; continue; }
+      const q = await toId(raw);
+      if (!quotePool.some(p => p.text === q.text)) {
+        quotePool.push(q);
+        savePool();
+      }
+    }
+    refilling = false;
+  }
+
+  function renderQuote(q) {
+    qTextEl.textContent = `"${q.text}"`;
+    qAuthEl.textContent = `— ${q.author}`;
+    if (q.category) {
+      qCatEl.textContent = `#${q.category}`;
+      qCatEl.style.display = "inline-block";
+    } else {
+      qCatEl.style.display = "none";
+    }
+  }
+
+  async function showQuote() {
+    if (showingQuote) return;
+    showingQuote = true;
+    try {
+      // 1) Ada di pool → tampil INSTAN
+      if (quotePool.length > 0) {
+        const q = quotePool.shift();
+        currentQuoteKey = q.text;
+        renderQuote(q);
+        savePool();
+        refillPool();
+        return;
+      }
+
+      // 2) Pool kosong → ambil langsung, tampilkan versi asli dulu, lalu diterjemahkan di tempat
+      qTextEl.textContent = "Mengambil quote...";
+      qAuthEl.textContent = "";
+      qCatEl.style.display = "none";
+
+      let raw = null;
+      while (!raw) {
+        raw = await fetchQuoteRetry(3);
+        if (!raw) await sleep(1500);
+      }
+
+      currentQuoteKey = raw.text;
+      renderQuote(raw);               // langsung tampil (bahasa asli)
+      toId(raw).then(t => {           // lalu ganti ke Indonesia kalau sudah selesai
+        if (currentQuoteKey === raw.text) renderQuote(t);
+      });
+      refillPool();
+    } finally {
+      showingQuote = false;
+    }
+  }
+
+  document.getElementById("refreshQuoteBtn").addEventListener("click", showQuote);
+  showQuote();
+
+  /* ── 4. SPOTIFY PLAYLIST BGM (AUTOPLAY + BACKGROUND PLAY + AUTO NEXT TRACK) ── */
+  const SPOTIFY_PLAYLIST_URI = "spotify:playlist:0TtcKTIaYOH2pYkC81cm12";
+  let spotifyController = null;
+  let isSpotifyPlaying = false;
+  let lastTrackUri = "";
+  let visInterval = null;
+
+  const bgmBtn = document.getElementById("bgmBtn");
+  const nextTrackBtn = document.getElementById("nextTrackBtn");
+  const trackBadge = document.getElementById("trackBadge");
+  const spotifyHint = document.getElementById("spotifyHint");
+
+  function setVisualizerState(playing) {
+    const bars = document.querySelectorAll(".vis-bar");
+    if (!playing) {
+      clearInterval(visInterval);
+      visInterval = null;
+      bars.forEach(b => {
+        b.style.height = "3px";
+        b.style.background = "var(--border)";
+      });
+      return;
+    }
+    if (visInterval) return;
+    visInterval = setInterval(() => {
+      bars.forEach((bar) => {
+        const h = Math.floor(Math.random() * 17) + 5;
+        bar.style.height = h + "px";
+        bar.style.background = h > 16 ? "var(--yellow)" : "var(--accent)";
+      });
+    }, 180);
+  }
+
+  function syncMediaSession(trackTitle = "Spotify Discipline Playlist") {
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: trackTitle,
+        artist: "ANTI NUNDA // PIXEL DISCIPLINE OS",
+        album: "Spotify Playlist"
+      });
+      navigator.mediaSession.playbackState = isSpotifyPlaying ? "playing" : "paused";
+      try {
+        navigator.mediaSession.setActionHandler("play", () => spotifyController?.resume());
+        navigator.mediaSession.setActionHandler("pause", () => spotifyController?.pause());
+        navigator.mediaSession.setActionHandler("nexttrack", () => spotifyController?.next());
+        navigator.mediaSession.setActionHandler("previoustrack", () => spotifyController?.previous());
+      } catch {}
+    }
+  }
+
+  function updateSpotifyUI(playing, titleText) {
+    isSpotifyPlaying = playing;
+    if (playing) {
+      bgmBtn.innerHTML = `${PX_ICONS.musicNote} BGM: ON`;
+      bgmBtn.classList.add("active-bgm");
+      if (titleText) trackBadge.textContent = titleText.toUpperCase();
+      spotifyHint.textContent = "Sedang diputar • Tetap jalan di latar belakang & auto-next";
+      setVisualizerState(true);
+    } else {
+      bgmBtn.innerHTML = `${PX_ICONS.musicNote} BGM: PAUSED`;
+      bgmBtn.classList.remove("active-bgm");
+      setVisualizerState(false);
+    }
+    syncMediaSession(titleText || trackBadge.textContent);
+  }
+
+  function mountFallbackIframe() {
+    const mount = document.getElementById("spotifyEmbedMount");
+    if (!mount.querySelector("iframe")) {
+      mount.innerHTML = `<iframe style="border:0" src="https://open.spotify.com/embed/playlist/0TtcKTIaYOH2pYkC81cm12?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager"></iframe>`;
+      trackBadge.textContent = "SPOTIFY PLAYLIST READY";
+    }
+  }
+
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    const element = document.getElementById("spotifyEmbedMount");
+    const options = {
+      uri: SPOTIFY_PLAYLIST_URI,
+      width: "100%",
+      height: "152",
+      theme: "dark"
+    };
+
+    IFrameAPI.createController(element, options, (EmbedController) => {
+      spotifyController = EmbedController;
+
+      try {
+        EmbedController.play();
+      } catch {}
+
+      EmbedController.addListener("playback_update", (e) => {
+        const data = e.data || {};
+        const paused = Boolean(data.isPaused);
+        const trackName = data.playingURI ? data.playingURI.split(":").pop() : "";
+        const displayTitle = data.title || (trackName ? `TRACK: ${trackName.slice(0, 10)}` : "SPOTIFY PLAYING");
+
+        updateSpotifyUI(!paused, displayTitle);
+
+        if (data.duration > 0 && data.position > 0 && (data.duration - data.position) <= 1200 && !paused) {
+          if (lastTrackUri !== data.playingURI) {
+            lastTrackUri = data.playingURI;
+            setTimeout(() => {
+              try { EmbedController.next(); } catch {}
+            }, 1300);
+          }
+        }
+      });
+
+      EmbedController.addListener("ready", () => {
+        trackBadge.textContent = "SPOTIFY: READY";
+        try { EmbedController.play(); } catch {}
+      });
+    });
+  };
+
+  setTimeout(() => {
+    if (!spotifyController) mountFallbackIframe();
+  }, 3500);
+
+  let firstGestureHandled = false;
+  function unlockAutoplayOnGesture() {
+    if (firstGestureHandled) return;
+    firstGestureHandled = true;
+    if (spotifyController && !isSpotifyPlaying) {
+      try { spotifyController.play(); } catch {}
+    }
+  }
+  document.addEventListener("pointerdown", unlockAutoplayOnGesture, { once: true });
+  document.addEventListener("keydown", unlockAutoplayOnGesture, { once: true });
+
+  bgmBtn.addEventListener("click", () => {
+    if (!spotifyController) return;
+    if (isSpotifyPlaying) {
+      spotifyController.pause();
+    } else {
+      spotifyController.resume();
+      spotifyController.play();
+    }
+  });
+
+  nextTrackBtn.addEventListener("click", () => {
+    if (!spotifyController) return;
+    spotifyController.next();
+    spotifyController.play();
+  });
+
+  const spotifyDock = document.getElementById("spotifyDock");
+  const toggleDockBtn = document.getElementById("toggleDockBtn");
+  toggleDockBtn.addEventListener("click", () => {
+    spotifyDock.classList.toggle("collapsed");
+    toggleDockBtn.textContent = spotifyDock.classList.contains("collapsed") ? "EXPAND" : "MINI";
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && isSpotifyPlaying && spotifyController) {
+      try { spotifyController.resume(); } catch {}
+    }
+  });
+
+  /* ── 5. SFX 8-BIT ── */
+  let audioCtx = null;
+  let sfxEnabled = true;
+  const sfxBtn = document.getElementById("sfxBtn");
+  sfxBtn.innerHTML = PX_ICONS.soundOn;
+  sfxBtn.addEventListener("click", () => {
+    sfxEnabled = !sfxEnabled;
+    sfxBtn.innerHTML = sfxEnabled ? PX_ICONS.soundOn : PX_ICONS.soundOff;
+  });
+
+  function playSfx(type) {
+    if (!sfxEnabled) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === "coin") {
+        osc.frequency.setValueAtTime(987.77, now);
+        osc.frequency.setValueAtTime(1318.51, now + 0.07);
+        gain.gain.setValueAtTime(0.22, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === "levelup") {
+        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = "square";
+          o.frequency.setValueAtTime(f, now + i * 0.08);
+          g.gain.setValueAtTime(0.22, now + i * 0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start(now + i * 0.08); o.stop(now + i * 0.08 + 0.25);
+        });
+      }
+    } catch {}
+  }
+
+  /* ── 6. STATE, XP, COMBO MULTIPLIER, BOSS HP & HEATMAP ── */
+  const getDateKey = (d = new Date()) => d.toISOString().slice(0, 10);
+  const TODAY_STR = getDateKey();
+  const TODAY_KEY = "px_day_" + TODAY_STR;
+  const HISTORY_KEY = "px_history";
+  const XP_KEY = "px_total_xp";
+  const MISSIONS_KEY = "px_total_missions";
+  const REVIEWS_KEY = "px_daily_reviews";
+  const COMBO_KEY = "px_combo_" + TODAY_STR;
+
+  const loadJSON = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
+  const saveJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+  let state = loadJSON(TODAY_KEY, {});
+  let history = loadJSON(HISTORY_KEY, {});
+  let totalXP = Number(localStorage.getItem(XP_KEY) || 0);
+  let totalMissions = Number(localStorage.getItem(MISSIONS_KEY) || 0);
+  let comboStreak = Number(localStorage.getItem(COMBO_KEY) || 0);
+
+  function getComboMult() {
+    return Math.min(2.5, 1 + comboStreak * 0.1);
+  }
+
+  function triggerBossHit(dmg) {
+    const mainEl = document.getElementById("mainContainer");
+    const bossPanel = document.getElementById("bossPanel");
+
+    mainEl.classList.remove("shake");
+    void mainEl.offsetWidth;
+    mainEl.classList.add("shake");
+
+    const floater = document.createElement("div");
+    floater.className = "damage-floater";
+    floater.textContent = `-${dmg} HP CRIT!`;
+    bossPanel.appendChild(floater);
+    setTimeout(() => floater.remove(), 850);
+  }
+
+  function getCurrentRankObj(xp) {
+    let cur = RANKS[0];
+    let next = null;
+    for (let i = 0; i < RANKS.length; i++) {
+      if (xp >= RANKS[i].minXP) {
+        cur = RANKS[i];
+        next = RANKS[i + 1] || null;
+      }
+    }
+    return { cur, next };
+  }
+
+  function updateHUD() {
+    const { cur, next } = getCurrentRankObj(totalXP);
+    document.getElementById("currentRankIcon").innerHTML = PX_ICONS[cur.icon];
+    document.getElementById("rankTitle").textContent = `LVL ${cur.lvl} • ${cur.name}`;
+    document.getElementById("xpCounter").textContent = next
+      ? `XP: ${totalXP} / ${next.minXP} (NEXT: ${next.name})`
+      : `XP: ${totalXP} (MAX TIER!)`;
+    document.getElementById("totalMissions").textContent = totalMissions;
+    document.getElementById("comboHudNum").textContent = `x${getComboMult().toFixed(1)}`;
+
+    let streak = 0;
+    const now = new Date();
+    if ((history[TODAY_STR] || 0) >= 70) streak++;
+    for (let i = 1; i <= 365; i++) {
+      const prev = new Date(now);
+      prev.setDate(now.getDate() - i);
+      if ((history[getDateKey(prev)] || 0) >= 70) streak++;
+      else break;
+    }
+    document.getElementById("streakNum").textContent = streak;
+
+    const maxBossHP = 1000;
+    const totalDmg = SLOTS.reduce((acc, s) => acc + (state[s.id] === "done" ? s.dmg : 0), 0);
+    const curBossHP = Math.max(0, maxBossHP - totalDmg);
+    const bossPct = (curBossHP / maxBossHP) * 100;
+
+    document.getElementById("bossHpLabel").textContent = `HP: ${curBossHP} / ${maxBossHP}`;
+    document.getElementById("bossHpFill").style.width = bossPct + "%";
+
+    const bossSub = document.getElementById("bossStatusText");
+    if (curBossHP === 0) {
+      bossSub.style.color = "var(--accent)";
+      bossSub.textContent = "BOSS DEFEATED! Monster Penundaan tumbang hari ini!";
+    } else if (totalDmg > 0) {
+      bossSub.style.color = "var(--yellow)";
+      bossSub.textContent = `Boss terkena ${totalDmg} DMG! Terus eksekusi jangan kasih kendor!`;
+    } else {
+      bossSub.style.color = "var(--fg2)";
+      bossSub.textContent = "Selesaikan quest untuk menghancurkan HP Boss!";
+    }
+
+    const hm = document.getElementById("heatmapGrid");
+    hm.innerHTML = "";
+    for (let i = 27; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const k = getDateKey(d);
+      const pct = history[k] || 0;
+      const cell = document.createElement("div");
+      cell.className = "hm-cell" + (k === TODAY_STR ? " today" : "");
+      if (pct >= 90) cell.dataset.lvl = "3";
+      else if (pct >= 50) cell.dataset.lvl = "2";
+      else if (pct > 0) cell.dataset.lvl = "1";
+      cell.title = `${k}: ${pct}%`;
+      hm.appendChild(cell);
+    }
+  }
+
+  /* ── 7. MODAL DAFTAR RANK ── */
+  const rankModal = document.getElementById("rankModal");
+  document.getElementById("openRanksBtn").addEventListener("click", () => {
+    const listEl = document.getElementById("rankListContainer");
+    const { cur } = getCurrentRankObj(totalXP);
+    listEl.innerHTML = RANKS.map(r => {
+      const unlocked = totalXP >= r.minXP;
+      const isCurrent = r.lvl === cur.lvl;
+      return `
+        <div class="rank-row-item ${unlocked ? "unlocked" : ""} ${isCurrent ? "current" : ""}">
+          <div class="rank-row-left">
+            <div class="rank-icon-frame" style="width:36px;height:36px">${PX_ICONS[r.icon]}</div>
+            <div>
+              <div class="r-name">LVL ${r.lvl} - ${r.name} ${isCurrent ? "◀ KAMU" : ""}</div>
+              <div style="font-size:17px;color:var(--fg2);margin-top:3px">${r.desc}</div>
+            </div>
+          </div>
+          <div class="r-xp">${r.minXP} XP</div>
+        </div>
+      `;
+    }).join("");
+    rankModal.classList.add("open");
+  });
+  document.getElementById("closeRanksBtn").addEventListener("click", () => rankModal.classList.remove("open"));
+  rankModal.addEventListener("click", (e) => { if (e.target === rankModal) rankModal.classList.remove("open"); });
+
+  /* ── 8. RENDER QUESTS & PROGRESS ── */
+  const scheduleEl = document.getElementById("schedule");
+  const timeToMins = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+
+  function renderSchedule() {
+    scheduleEl.innerHTML = "";
+    const now = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    const mult = getComboMult();
+
+    SLOTS.forEach(slot => {
+      const st = timeToMins(slot.time);
+      const en = timeToMins(slot.end);
+      const val = state[slot.id] || "none";
+      const isActive = nowMins >= st && nowMins < en && val === "none";
+      const bonusXP = Math.round(slot.xp * mult);
+
+      const wrap = document.createElement("div");
+      wrap.className = `slot-wrap ${val === "done" ? "done" : ""} ${val === "skipped" ? "skipped" : ""} ${isActive ? "active" : ""}`;
+      wrap.style.setProperty("--slot-color", slot.color);
+
+      const checkChar = val === "done" ? "✓" : (val === "skipped" ? "X" : "");
+
+      wrap.innerHTML = `
+        <div class="slot-main">
+          <div class="slot-check">${checkChar}</div>
+          <div class="slot-px-icon">${PX_ICONS[slot.icon]}</div>
+          <div class="slot-info">
+            <div class="slot-meta">
+              <span class="slot-time">${slot.time} - ${slot.end}</span>
+              ${isActive ? `<span class="tag-now">ACTIVE NOW</span>` : ""}
+              <span class="tag-xp">+${bonusXP} XP • ${slot.dmg} DMG</span>
+            </div>
+            <div class="slot-title">${slot.title}</div>
+            <div class="slot-desc">${slot.desc}</div>
+          </div>
+          <button type="button" class="px-btn guide-toggle">${PX_ICONS.info} INFO</button>
+        </div>
+        <div class="slot-guide">
+          <div class="guide-head">${slot.guideTitle}</div>
+          <ul>${slot.guideItems.map(i => `<li>${i}</li>`).join("")}</ul>
+        </div>
+      `;
+
+      wrap.querySelector(".guide-toggle").addEventListener("click", (e) => {
+        e.stopPropagation();
+        wrap.classList.toggle("open");
+      });
+
+      wrap.querySelector(".slot-main").addEventListener("click", () => {
+        const cur = state[slot.id] || "none";
+        const next = cur === "none" ? "done" : (cur === "done" ? "skipped" : "none");
+        state[slot.id] = next;
+        saveJSON(TODAY_KEY, state);
+
+        if (next === "done") {
+          const gained = Math.round(slot.xp * getComboMult());
+          totalXP += gained;
+          totalMissions++;
+          comboStreak++;
+          playSfx("coin");
+          triggerBossHit(slot.dmg);
+        } else if (cur === "done") {
+          totalXP = Math.max(0, totalXP - slot.xp);
+          totalMissions = Math.max(0, totalMissions - 1);
+          comboStreak = Math.max(0, comboStreak - 1);
+        }
+
+        try {
+          localStorage.setItem(XP_KEY, totalXP);
+          localStorage.setItem(MISSIONS_KEY, totalMissions);
+          localStorage.setItem(COMBO_KEY, comboStreak);
+        } catch {}
+
+        renderSchedule();
+        updateProgress(next === "done");
+      });
+
+      scheduleEl.appendChild(wrap);
+    });
+  }
+
+  function updateProgress(justDone = false) {
+    const doneCount = SLOTS.filter(s => state[s.id] === "done").length;
+    const pct = Math.round((doneCount / SLOTS.length) * 100);
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressPct").textContent = pct + "%";
+
+    const msgEl = document.getElementById("progressMsg");
+    if (pct === 0) msgEl.textContent = "Mulai quest pertama untuk dapat XP!";
+    else if (pct < 70) msgEl.textContent = `${doneCount}/${SLOTS.length} Quest selesai. Lanjutkan!`;
+    else if (pct < 100) msgEl.textContent = `Streak aman! ${doneCount}/${SLOTS.length} selesai.`;
+    else {
+      msgEl.textContent = "100% QUEST CLEAR! TIER NEVER GIVE UP MENTALITY!";
+      if (justDone) playSfx("levelup");
+    }
+
+    history[TODAY_STR] = pct;
+    saveJSON(HISTORY_KEY, history);
+    updateHUD();
+  }
+
+  /* ── 9. CATATAN REVIEW HARIAN AUTO-SAVE + RIWAYAT ── */
+  const reviewInput = document.getElementById("reviewInput");
+  const saveIndicator = document.getElementById("saveIndicator");
+  const historyDrawer = document.getElementById("historyDrawer");
+
+  let allReviews = loadJSON(REVIEWS_KEY, {});
+  reviewInput.value = allReviews[TODAY_STR] || "";
+
+  let saveTimeout = null;
+  reviewInput.addEventListener("input", () => {
+    saveIndicator.textContent = "● MENYIMPAN...";
+    saveIndicator.style.color = "var(--yellow)";
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      allReviews[TODAY_STR] = reviewInput.value;
+      saveJSON(REVIEWS_KEY, allReviews);
+      saveIndicator.textContent = "● TERSIMPAN OTOMATIS";
+      saveIndicator.style.color = "var(--accent)";
+      renderReviewHistory();
+    }, 300);
+  });
+
+  function renderReviewHistory() {
+    const keys = Object.keys(allReviews).filter(k => allReviews[k].trim() !== "").sort().reverse();
+    if (keys.length === 0) {
+      historyDrawer.innerHTML = `<div style="color:var(--fg2)">Belum ada catatan review tersimpan.</div>`;
+      return;
+    }
+    historyDrawer.innerHTML = keys.map(k => `
+      <div class="hist-item">
+        <div class="hist-date">[${k}] ${k === TODAY_STR ? "(HARI INI)" : ""}</div>
+        <div style="white-space:pre-wrap">${allReviews[k].replace(/</g, "&lt;")}</div>
+      </div>
+    `).join("");
+  }
+  renderReviewHistory();
+
+  document.getElementById("toggleHistoryBtn").addEventListener("click", () => {
+    historyDrawer.classList.toggle("open");
+  });
+
+  /* ── 10. JAM, TEMA, STATIC SVG INJECTION & RESET ── */
+  document.getElementById("logoSvgSlot").innerHTML = PX_ICONS.swordBolt;
+  document.getElementById("spotifyIconSlot").innerHTML = PX_ICONS.spotifyDisc;
+  document.getElementById("bgmIconSlot").innerHTML = PX_ICONS.musicNote;
+  document.getElementById("nextIconSlot").innerHTML = PX_ICONS.nextTrack;
+  document.getElementById("trophyIconSlot").innerHTML = PX_ICONS.trophy;
+  document.getElementById("modalTrophySlot").innerHTML = PX_ICONS.trophy;
+  document.getElementById("fireIconSlot").innerHTML = PX_ICONS.fire;
+  document.getElementById("bossAvatarSlot").innerHTML = PX_ICONS.bossMonster;
+  document.getElementById("scrollIconSlot").innerHTML = PX_ICONS.scroll;
+  document.getElementById("questSecIcon").innerHTML = PX_ICONS.swordBolt;
+  document.getElementById("journalIconSlot").innerHTML = PX_ICONS.reviewBook;
+  document.getElementById("historyIconSlot").innerHTML = PX_ICONS.scroll;
+
+  const root = document.documentElement;
+  const themeBtn = document.getElementById("themeBtn");
+  let theme = localStorage.getItem("px_theme") || "dark";
+  const applyTheme = t => {
+    root.setAttribute("data-theme", t);
+    themeBtn.innerHTML = t === "dark" ? PX_ICONS.sun : PX_ICONS.moon;
+    try { localStorage.setItem("px_theme", t); } catch {}
+  };
+  applyTheme(theme);
+  themeBtn.addEventListener("click", () => { theme = theme === "dark" ? "light" : "dark"; applyTheme(theme); });
+
+  function tick() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    document.getElementById("clock").textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
+    const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
+    const months = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
+    document.getElementById("dayLabel").textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const bar = document.getElementById("statusBar");
+    const iconSlot = document.getElementById("statusIconSlot");
+    const txt = document.getElementById("statusText");
+    if (mins >= 420 && mins < 940) {
+      bar.classList.add("in-school");
+      iconSlot.innerHTML = PX_ICONS.school;
+      txt.textContent = "MODE SEKOLAH AKTIF — Fokus belajar di kelas dulu!";
+    } else if (mins >= 940 && mins < 970) {
+      bar.classList.add("in-school");
+      iconSlot.innerHTML = PX_ICONS.bus;
+      txt.textContent = "PERJALANAN PULANG — Bersiap mulai quest jam 16.10!";
+    } else if (mins >= 970 && mins < 1320) {
+      bar.classList.remove("in-school");
+      iconSlot.innerHTML = PX_ICONS.bolt;
+      txt.textContent = "WAKTU PRODUKTIF AKTIF — Eksekusi quest sekarang!";
+    } else {
+      bar.classList.remove("in-school");
+      iconSlot.innerHTML = PX_ICONS.moon;
+      txt.textContent = "WAKTU ISTIRAHAT — Tidur cukup agar esok makin kuat!";
+    }
+  }
+  setInterval(tick, 1000);
+  tick();
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    state = {};
+    comboStreak = 0;
+    saveJSON(TODAY_KEY, state);
+    try { localStorage.setItem(COMBO_KEY, 0); } catch {}
+    renderSchedule();
+    updateProgress(false);
+  });
+
+  renderSchedule();
+  updateProgress(false);
+</script>
+</body>
+</html>
