@@ -1,0 +1,110 @@
+# Format: kategori|teks
+# Total: 100 baris motivasi (baris '#' diabaikan parser)
+
+DISIPLIN|Disiplin adalah melakukan apa yang harus dilakukan, bahkan saat rasa malas sedang berada di puncaknya.
+DISIPLIN|Motivasi hanya membuatmu memulai, tapi kebiasaan dan disiplinlah yang membawamu sampai garis finis.
+DISIPLIN|Jangan tunggu mood bagus untuk mulai bergerak. Bergeraklah dulu, maka mood bagus akan menyusul.
+DISIPLIN|Satu persen lebih baik setiap hari terdengar kecil, tapi dalam setahun hasilnya menjadi 37 kali lipat lebih kuat.
+DISIPLIN|Rasa sakit dari disiplin hanya bertahan sebentar, sedangkan penyesalan akibat menunda bertahan selamanya.
+DISIPLIN|Orang sukses tidak selalu lebih pintar; mereka hanya tidak berhenti saat orang lain mulai mencari alasan.
+DISIPLIN|Kontrol dirimu di jam-jam krusial sore hingga malam, karena di sanalah masa depanmu sedang ditempa.
+DISIPLIN|Tidak ada jalan pintas menuju versi terbaik dirimu—hanya pengulangan harian yang konsisten.
+DISIPLIN|Disiplin bukan penjara yang membatasi kebebasanmu; disiplin adalah jembatan menuju kebebasan sejati.
+DISIPLIN|Apa yang kamu lakukan saat tidak ada orang yang mengawasi menentukan seberapa jauh kamu akan melangkah.
+DISIPLIN|Jangan tukar tujuan jangka panjangmu hanya demi kesenangan instan selama lima menit di layar ponsel.
+DISIPLIN|Konsistensi mengalahkan intensitas. Lebih baik 1 jam fokus setiap hari daripada 10 jam lalu menghilang sebulan.
+DISIPLIN|Setiap janji kecil pada diri sendiri yang berhasil kamu tepati akan membangun rasa percaya diri yang tak tergoyahkan.
+DISIPLIN|Jadilah seseorang yang bisa diandalkan oleh dirimu sendiri di masa depan.
+DISIPLIN|Rutinitas harianmu adalah cetak biru dari siapa dirimu lima tahun lagi.
+
+ANTI-NUNDA|Menunda tugas bukan berarti beristirahat; pikiranmu tetap lelah karena terus dihantui pekerjaan yang belum selesai.
+ANTI-NUNDA|Aturan 5 menit: kerjakan saja dulu selama lima menit. Bagian tersulit dari setiap quest hanyalah memulainya.
+ANTI-NUNDA|Besok adalah hari favorit bagi orang yang gagal. Eksekusi sekarang juga selagi waktunya masih ada.
+ANTI-NUNDA|Monster penundaan hanya tumbuh besar saat kamu memberinya makan dengan alasan 'nanti saja'.
+ANTI-NUNDA|Fokus pada satu quest di depan mata. Jangan biarkan HP dan video pendek mencuri jam produktifmu.
+ANTI-NUNDA|Tutup tab yang tidak perlu, singkirkan distraksi, dan selesaikan misi hari ini sampai tuntas.
+ANTI-NUNDA|Setiap kali kamu mengalahkan rasa malas hari ini, level mentalmu naik satu tingkat lebih tinggi.
+ANTI-NUNDA|Waktu tidak pernah menunggu kesiapanmu; mulailah sekarang dengan apa yang ada di tanganmu.
+ANTI-NUNDA|Pekerjaan yang ditunda tidak akan menjadi lebih mudah besok—bebannya justru terasa dua kali lebih berat.
+ANTI-NUNDA|Jangan menjadi penonton di hidup sendiri; ambil kendali dan eksekusi jadwalmu detik ini juga.
+ANTI-NUNDA|Satu langkah kecil hari ini jauh lebih berharga daripada seratus rencana sempurna yang tidak pernah dijalankan.
+ANTI-NUNDA|Algoritma media sosial dirancang untuk mencuri waktumu; jangan biarkan fokusmu dibajak secara gratis.
+ANTI-NUNDA|Hancurkan kebiasaan menunda sekarang sebelum ia menghancurkan potensi terbaikmu.
+ANTI-NUNDA|Rasa malas hanyalah sinyal otak yang mencari zona nyaman; lewati 10 menit pertama dan kamu akan masuk mode fokus.
+ANTI-NUNDA|Selesaikan yang tersulit lebih dulu, maka sisa harimu akan terasa jauh lebih ringan.
+
+ANTI-OVERTHINKING|Overthinking tidak akan menyelesaikan masalah hari esok; ia hanya merampas ketenanganmu hari ini.
+ANTI-OVERTHINKING|Pikiran yang terlalu ramai hanya bisa ditenangkan oleh tindakan nyata, bukan dengan terus memikirkannya.
+ANTI-OVERTHINKING|Kamu tidak harus melihat seluruh tangga sampai puncak; cukup fokus melangkah di anak tangga pertama.
+ANTI-OVERTHINKING|Berhenti mengkhawatirkan skenario terburuk yang bahkan belum tentu terjadi. Fokus pada apa yang bisa kamu kendalikan.
+ANTI-OVERTHINKING|Tulis apa yang ada di kepalamu, pecah menjadi langkah kecil, lalu eksekusi satu per satu tanpa panik.
+ANTI-OVERTHINKING|Ketenangan pikiran lahir saat kamu berdamai dengan proses dan berhenti membandingkan garis start-mu dengan orang lain.
+ANTI-OVERTHINKING|Jangan biarkan ketakutan akan kesalahan membuatmu diam di tempat. Kesalahan adalah data untuk perbaikan.
+ANTI-OVERTHINKING|Tarik napas dalam, embuskan perlahan, dan kembalikan kesadaranmu sepenuhnya ke detik ini.
+ANTI-OVERTHINKING|Kamu tidak perlu menjawab semua pertanyaan hidup malam ini; cukup selesaikan tugas yang ada di depan mata.
+ANTI-OVERTHINKING|Pikiranmu adalah alat untuk memecahkan masalah, bukan penjara untuk menyiksa dirimu sendiri.
+ANTI-OVERTHINKING|Perfeksionisme adalah bentuk lain dari ketakutan; lebih baik selesai dan terus diperbaiki daripada sempurna tapi fiktif.
+ANTI-OVERTHINKING|Fokuslah pada usaha yang kamu keluarkan, bukan pada hasil akhir yang berada di luar jangkauanmu.
+ANTI-OVERTHINKING|Jangan percaya semua isi pikiranmu saat kamu sedang lelah; istirahatlah dan lihat lagi besok dengan kepala dingin.
+ANTI-OVERTHINKING|Keraguan akan selalu hilang begitu tanganmu mulai bekerja.
+
+WORKOUT|Tubuh yang kuat adalah rumah bagi pikiran yang tajam. Jangan lewatkan latihan soremu hari ini.
+WORKOUT|Otot tidak tumbuh saat kamu bersantai; ia terbentuk saat kamu mendorong batas kemampuanmu di setiap set.
+WORKOUT|Surplus kalori dan latihan teratur adalah investasi jangka panjang yang tidak bisa dibeli secara instan.
+WORKOUT|Keringat hari ini adalah kepercayaan diri di masa depan. Jaga postur, jaga hidrasi, dan selesaikan repetisinya.
+WORKOUT|Konsistensi di atas matras latihan jauh lebih berharga daripada latihan berat yang hanya dilakukan sebulan sekali.
+WORKOUT|Tidur sebelum jam 22.00 bukan tanda kelemahan, melainkan fase terpenting agar otot dan otakmu pulih maksimal.
+WORKOUT|Setiap repetisi terakhir saat otot mulai terasa panas adalah momen di mana perubahan fisik sebenarnya terjadi.
+WORKOUT|Jangan remehkan kekuatan porsi makan yang cukup; tanpa bahan bakar yang tepat, tubuhmu tidak punya bahan untuk tumbuh.
+WORKOUT|Perbaiki postur tubuhmu sekarang: tegakkan punggung, tarik bahu, dan bernapaslah dengan tenang.
+WORKOUT|Air putih yang cukup dan kebersihan diri adalah fondasi paling sederhana namun paling berdampak untuk penampilanmu.
+WORKOUT|Tidak ada alat mahal yang bisa menggantikan kemauan keras untuk berlatih setiap hari.
+WORKOUT|Jaga tubuhmu hari ini, karena tubuh itulah satu-satunya tempat tinggalmu seumur hidup.
+
+CODING|Kode yang bersih dan berjalan lancar lahir dari ketekunan membaca pesan error, bukan dari menghindarinya.
+CODING|Jangan terjebak menonton tutorial tanpa henti; bangun proyek nyata, pecahkan bug, dan pelajari cara kerjanya.
+CODING|Setiap baris kode yang kamu tulis hari ini adalah fondasi untuk sistem yang jauh lebih besar di masa depan.
+CODING|Programmer hebat bukan yang tidak pernah menemui bug, melainkan yang paling sabar melacak akar masalahnya.
+CODING|Satu fitur selesai hari ini jauh lebih berarti daripada seratus ide cemerlang yang hanya tersimpan di kepala.
+CODING|Logika terasah saat kamu berani menghadapi masalah kompleks dan memecahnya menjadi bagian-bagian kecil.
+CODING|Jangan takut merusak kode saat bereksperimen; dari sanalah pemahaman mendalam tentang sistem terbentuk.
+CODING|Konsistensi ngoding 45 menit setiap hari akan membawamu jauh melampaui mereka yang hanya belajar saat ada tugas.
+CODING|Dokumentasikan progresmu, rapikan struktur file-mu, dan banggalah pada setiap proyek yang berhasil kamu deploy.
+CODING|Masalah teknis selalu punya solusi; jika belum ketemu, artinya kamu hanya perlu istirahat sejenak lalu membaca ulang log-nya.
+CODING|Teknologi terus berkembang, dan kemampuanmu belajar mandiri adalah senjata terkuat yang kamu miliki.
+CODING|Bangun solusi yang bermanfaat bagi orang lain, sekecil apa pun versi awalnya.
+
+CATUR|Dalam catur maupun kehidupan, jangan pernah melangkah terburu-buru sebelum memeriksa ancaman dan peluang di papan.
+CATUR|Setiap kekalahan adalah materi evaluasi gratis; pelajari di mana letak blundermu agar tidak terulang lagi.
+CATUR|Kuasai pusat papan, lindungi rajamu, dan tetap tenang bahkan saat berada di bawah tekanan waktu.
+CATUR|Satu langkah ceroboh bisa meruntuhkan permainan yang bagus; jaga fokusmu dari pembukaan hingga babak akhir.
+CATUR|Jangan bermain saat emosi memuncak; ketenangan adalah perbedaan utama antara pemain asal gerak dan ahli strategi.
+CATUR|Selalu tanya pada diri sendiri sebelum menyentuh bidak: 'Apa rencana lawan setelah aku melangkah ke sini?'
+CATUR|Taktik memenangkan pertempuran, tapi strategi dan kesabaranlah yang memenangkan keseluruhan permainan.
+CATUR|Posisi yang tertekan bukan akhir segalanya; selalu ada langkah bertahan terbaik jika kamu mau mencarinya.
+CATUR|Latihan puzzle harian melatih matamu melihat pola yang tidak disadari oleh lawan.
+CATUR|Bermainlah melawan lawan yang lebih kuat jika ingin berkembang; kemenangan mudah tidak mengajarkan hal baru.
+
+STOIC|Kendalikan fokus dan usahamu sendiri; biarkan hal-hal di luar kendalimu berjalan sebagaimana mestinya.
+STOIC|Hambatan di jalan bukanlah penghalang perjalanan—hambatan itu sendiri adalah bagian dari jalan yang harus ditempuh.
+STOIC|Jadilah karakter utama dalam hidupmu sendiri: tenang saat diuji, tangguh saat ditekan, dan pantang menyerah.
+STOIC|Mental baja dibentuk bukan saat segalanya berjalan mudah, melainkan saat kamu tetap berjalan meski sedang lelah.
+STOIC|Evaluasi dirimu setiap malam sebelum tidur: apa yang sudah baik hari ini, dan apa yang harus diperbaiki besok.
+STOIC|Tidak ada hal eksternal yang bisa merusak ketenanganmu kecuali kamu sendiri yang memberinya izin.
+STOIC|Fokus menjadi lebih baik daripada dirimu yang kemarin, bukan lebih baik daripada orang lain.
+STOIC|Kesulitan hari ini sedang melatih otot mentalmu untuk menghadapi tanggung jawab yang lebih besar di masa depan.
+STOIC|Jangan mengeluh tentang keadaan; gunakan energi itu untuk memperbaiki apa yang bisa kamu ubah sekarang.
+STOIC|Orang yang mampu menguasai dirinya sendiri jauh lebih kuat daripada orang yang mampu menaklukkan sebuah kota.
+STOIC|Tetap rendah hati saat meraih kemenangan, dan tetap tegak berdiri saat menghadapi kegagalan.
+STOIC|Waktu adalah aset paling berharga yang tidak bisa dibeli kembali—gunakan setiap jamnya dengan sadar.
+
+GRINDSET|Saat orang lain sibuk mencari hiburan, kamu sedang membangun fondasi masa depanmu dalam diam.
+GRINDSET|Jangan beri tahu semua orang tentang rencanamu; biarkan hasil kerja kerasmu yang berbicara.
+GRINDSET|Lelah itu wajar, berhenti itu pilihan. Istirahatlah jika perlu, tapi jangan pernah menyerah.
+GRINDSET|Kamu sedang berada di fase menempa diri; nikmati proses sunyinya sebelum hasilnya terlihat oleh semua orang.
+GRINDSET|Standar tinggimu hari ini adalah kualitas hidupmu di masa depan. Jangan turunkan standarmu demi kenyamanan sesaat.
+GRINDSET|Setiap quest yang kamu centang hari ini adalah bukti nyata bahwa kamu memegang kendali atas hidupmu.
+GRINDSET|Tidak ada yang akan datang menyelamatkanmu selain disiplin dan kerja kerasmu sendiri.
+GRINDSET|Jadikan rasa bosan sebagai teman latihan; di balik rasa bosan itulah keahlian tingkat tinggi terbentuk.
+GRINDSET|Fokus pada proses harian sampai kesuksesan menjadi efek samping yang tidak terhindarkan.
+GRINDSET|Hari ini adalah kesempatan baru untuk membuktikan bahwa kamu lebih kuat dari alasanmu sendiri.
